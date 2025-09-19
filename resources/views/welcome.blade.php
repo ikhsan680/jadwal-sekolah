@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JadwalKu</title>
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+
+    <!-- Tailwind via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="font-sans bg-gradient-to-br from-indigo-100 via-white to-indigo-50 min-h-screen">
 
@@ -46,13 +48,12 @@
         <p class="mt-4 text-gray-700 text-base md:text-lg font-medium">
             Aplikasi praktis untuk mengecek jadwal belajar kamu.
         </p>
-        <a href="#"
+        <a href="/pilih"
            class="inline-block mt-8 px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-full shadow hover:shadow-lg hover:scale-105 transition">
             LOGIN
         </a>
     </main>
 
-    <script src="{{ asset('js/app.js') }}"></script>
     <script>
         const sidebar = document.getElementById('sidebar');
         document.getElementById('btnMenu').addEventListener('click', () => {
