@@ -14,10 +14,18 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('index');
     
 });
 Route::get('/pilih', function () {
     return view('pilih');
 });
-
+route::get('/index', function () {
+    return view('index');
+});
+Route::get('/siswa/login', function () {
+    return view('siswa.login');
+})->name('siswa.login');
+Route::get('/guru/login', function () {
+    return view('guru.login');
+})->name('guru.login');

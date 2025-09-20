@@ -1,31 +1,60 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pilih Role</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pilih Role</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="flex items-center justify-center min-h-screen bg-purple-50">
+<body class="min-h-screen flex flex-col relative">
 
-    <div class="bg-purple-100 rounded-3xl shadow-2xl p-12 text-center w-[420px]">
-        <h1 class="text-purple-700 font-extrabold text-3xl mb-8 border-b-4 border-purple-400 pb-4">
-            PILIH ROLE
-        </h1>
+  <!-- Latar belakang belah dua -->
+  <div class="absolute top-0 left-0 w-1/2 h-full bg-white"></div>
+  <div class="absolute top-0 right-0 w-1/2 h-full bg-indigo-600"></div>
 
-        <div class="space-y-6">
-          
-            <a href="/siswa/login" 
-               class="block bg-purple-600 hover:bg-purple-700 text-white font-bold py-5 text-xl rounded-full shadow-lg transition transform hover:scale-105">
-                SISWA
-            </a>
+  <!-- NAVBAR MELAYANG -->
+ <header class="fixed top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-6xl 
+               bg-white rounded-xl shadow-lg z-50">
+  <div class="flex items-center justify-between px-6 py-4">
+    <!-- Logo -->
+    <h1 class="font-extrabold text-2xl text-indigo-600">
+      SmartJadwal
+    </h1>
 
-            <a href="/guru/login" 
-               class="block bg-purple-600 hover:bg-purple-700 text-white font-bold py-5 text-xl rounded-full shadow-lg transition transform hover:scale-105">
-                GURU
-            </a>
-        </div>
+    <!-- Menu kanan -->
+    <nav class="flex items-center pr-5">
+      <a href="/index" class="text-gray-700 text-xl font-bold hover:text-indigo-600">
+        Home
+      </a>
+    </nav>
+  </div>
+</header>
+
+  <!-- Konten utama -->
+  <main class="flex flex-1 items-center justify-center relative z-10 mt-28">
+  <div class="bg-white rounded-3xl shadow-[0_20px_40px_rgba(0,0,0,0.2)] p-12 w-[420px] text-center">
+      <h1 class="text-indigo-700 font-extrabold text-3xl mb-8 border-b-4 border-indigo-400 pb-4">
+        PILIH ROLE
+      </h1>
+
+      <div class="space-y-6">
+        <a href="{{ route('siswa.login') }}"
+           class="block w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 text-lg rounded-full shadow-lg transition transform hover:scale-105">
+          SISWA
+        </a>
+
+        <a href="/guru/login"
+           class="block w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 text-lg rounded-full shadow-lg transition transform hover:scale-105">
+          GURU
+        </a>
+      </div>
     </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="relative z-10 text-center text-black text-sm py-4">
+    © 2025 <span class="font-semibold text-black">SmartJadwal</span>. All rights reserved.
+  </footer>
 
 </body>
 </html>
