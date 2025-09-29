@@ -16,7 +16,7 @@ class Guru extends Model
     protected $fillable = [
         'username',
         'sekolah',
-        'kode',
+        'nip',
     ];
 
     // Kalau tidak mau pakai timestamps (created_at & updated_at)

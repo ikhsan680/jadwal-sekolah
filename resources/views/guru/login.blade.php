@@ -103,7 +103,13 @@
     LOGIN
   </button>
 </form>
-
+<!-- Tambahkan link register -->
+<p class="mt-6 text-center text-sm text-gray-600">
+  Belum punya akun? 
+  <a href="{{ route('guru.register') }}" class="text-indigo-600 font-semibold hover:underline">
+    Register di sini
+  </a>
+</p>
     </div>
   </main>
 

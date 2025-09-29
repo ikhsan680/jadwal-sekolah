@@ -41,7 +41,10 @@ Route::post('/siswa/logout', [SiswaController::class, 'logout'])->name('siswa.lo
 | Login Guru
 |--------------------------------------------------------------------------
 */
+Route::get('/register-guru', [GuruController::class, 'showRegisterForm'])->name('guru.register');
+Route::post('/register-guru', [GuruController::class, 'register'])->name('guru.register.submit');
 Route::get('/guru/login', [GuruController::class, 'showLoginForm'])->name('guru.login');
 Route::post('/guru/login', [GuruController::class, 'login'])->name('guru.login.submit');
 Route::get('/guru/dashboard', [GuruController::class, 'dashboard'])->name('guru.dashboard');
 Route::post('/guru/logout', [GuruController::class, 'logout'])->name('guru.logout');
+
