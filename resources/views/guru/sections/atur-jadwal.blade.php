@@ -32,8 +32,12 @@
         <option>Senin</option><option>Selasa</option><option>Rabu</option>
         <option>Kamis</option><option>Jumat</option>
       </select>
-      <input type="text" name="jam" placeholder="07.00 - 09.30" class="border rounded px-3 py-2">
+
+      <input type="time" name="jamMulai" class="border rounded px-3 py-2">
+      <input type="time" name="jamSelesai" class="border rounded px-3 py-2">
       <input type="text" name="mapel" placeholder="Nama Mapel" class="border rounded px-3 py-2">
+      <input type="text" name="guru" placeholder="Nama Guru" class="border rounded px-3 py-2">         
+
       <button type="button" onclick="tambahJadwal()"
               class="bg-green-600 text-white px-4 py-2 rounded-lg">➕ Tambah</button>
     </form>
@@ -42,10 +46,10 @@
     <div class="bg-white shadow rounded-xl overflow-hidden">
       <table class="w-full text-center" id="tabelJadwal">
         <thead class="bg-indigo-600 text-white">
-          <tr><th class="px-4 py-2">Hari</th><th>Jam</th><th>Mata Pelajaran</th><th>Aksi</th></tr>
+          <tr><th class="px-4 py-2">Hari</th><th>Jam</th><th>Mata Pelajaran</th><th>Guru</th><th>Aksi</th></tr>
         </thead>
         <tbody>
-          <tr><td colspan="4" class="py-4 text-gray-500">Belum ada jadwal</td></tr>
+          <tr><td colspan="5" class="py-4 text-gray-500">Belum ada jadwal</td></tr>
         </tbody>
       </table>
     </div>
@@ -54,11 +58,12 @@
 
 <script>
   let kelasAktif = null;
+  let jadwalData = {};
 
   function tampilkanKelas() {
     const angkatan = document.getElementById('angkatan').value;
     const container = document.getElementById('kelasContainer');
-    container.innerHTML = ""; // reset
+    container.innerHTML = "";
 
     if (!angkatan) {
       alert("Pilih angkatan dulu!");
@@ -70,7 +75,7 @@
     if (angkatan === "X") {
       kelasList = ["PPLG 1", "PPLG 2", "TJKT", "MPLB", "AKL"];
     } else if (angkatan === "XI" || angkatan === "XII") {
-      kelasList = ["RPL 1", "RPL 1", "TKJ", "MP", "AK"];
+      kelasList = ["RPL 1", "RPL 2", "TKJ", "MP", "AK"];
     }
 
     kelasList.forEach(kls => {
@@ -84,53 +89,105 @@
     container.classList.remove('hidden');
   }
 
-  function openJadwal(kelas) {
-    kelasAktif = kelas;
-    document.getElementById('judulKelas').innerText = "Jadwal Kelas " + kelas;
-    document.getElementById('jadwal-detail').classList.remove('hidden');
-    document.getElementById('jadwal-detail').scrollIntoView({ behavior: "smooth" });
+function openJadwal(kelas) {
+  kelasAktif = kelas;
+  document.getElementById('judulKelas').innerText = "Jadwal Kelas " + kelas;
+  document.getElementById('jadwal-detail').classList.remove('hidden');
+
+  // Encode biar spasi jadi %20
+  fetch(`/api/jadwal/${encodeURIComponent(kelas)}`)
+    .then(res => res.json())
+    .then(data => {
+      console.log("DATA DARI API:", data); // 👈 cek hasil
+      jadwalData[kelas] = data;
+      renderTabel();
+    })
+    .catch(err => console.error("ERROR API:", err));
+}
+
+
+  function renderTabel() {
+    const tbody = document.querySelector('#tabelJadwal tbody');
+    tbody.innerHTML = "";
+
+    if (!jadwalData[kelasAktif] || jadwalData[kelasAktif].length === 0) {
+      tbody.innerHTML = `<tr><td colspan="5" class="py-4 text-gray-500">Belum ada jadwal</td></tr>`;
+      return;
+    }
+
+    jadwalData[kelasAktif].forEach((item, index) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${item.hari}</td>
+        <td>${item.jam_mulai} - ${item.jam_selesai}</td>
+        <td>${item.mapel}</td>
+        <td>${item.guru}</td>
+        <td class="flex gap-2 justify-center py-2">
+          <button onclick="editJadwal(${item.id}, ${index})" class="bg-yellow-500 text-white px-3 py-1 rounded">✏️</button>
+          <button onclick="hapusJadwal(${item.id}, ${index})" class="bg-red-600 text-white px-3 py-1 rounded">🗑️</button>
+        </td>
+      `;
+      tbody.appendChild(row);
+    });
   }
 
   function tambahJadwal() {
     const form = document.getElementById('formTambah');
-    const hari = form.hari.value;
-    const jam = form.jam.value;
-    const mapel = form.mapel.value;
+    const data = {
+      kelas: kelasAktif,
+      hari: form.hari.value,
+      jam_mulai: form.jamMulai.value,
+      jam_selesai: form.jamSelesai.value,
+      mapel: form.mapel.value,
+      guru: form.guru.value
+    };
 
-    if (!hari || !jam || !mapel) return alert("Lengkapi semua field!");
+    if (!data.hari || !data.jam_mulai || !data.jam_selesai || !data.mapel || !data.guru) {
+      return alert("Lengkapi semua field!");
+    }
 
-    const tbody = document.querySelector('#tabelJadwal tbody');
-    if (tbody.querySelector('td')?.innerText.includes("Belum ada")) tbody.innerHTML = "";
-
-    const row = document.createElement('tr');
-    row.className = "border hover:bg-indigo-50";
-    row.innerHTML = `
-      <td class="px-4 py-2">${hari}</td>
-      <td>${jam}</td>
-      <td>${mapel}</td>
-      <td class="flex gap-2 justify-center py-2">
-        <button onclick="editJadwal(this)" class="bg-yellow-500 text-white px-3 py-1 rounded">✏️</button>
-        <button onclick="hapusJadwal(this)" class="bg-red-600 text-white px-3 py-1 rounded">🗑️</button>
-      </td>
-    `;
-    tbody.appendChild(row);
-
-    form.reset();
+    fetch('/api/jadwal', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(res => {
+      if (!jadwalData[kelasAktif]) jadwalData[kelasAktif] = [];
+      jadwalData[kelasAktif].push(res);
+      renderTabel();
+      form.reset();
+    })
+    .catch(err => console.error(err));
   }
 
-  function editJadwal(btn) {
-    const row = btn.closest('tr');
-    const mapel = prompt("Edit Mata Pelajaran:", row.children[2].innerText);
-    if (mapel) row.children[2].innerText = mapel;
+  function editJadwal(id, index) {
+    const mapelBaru = prompt("Edit Mata Pelajaran:", jadwalData[kelasAktif][index].mapel);
+    if (mapelBaru) {
+      fetch(`/api/jadwal/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mapel: mapelBaru })
+      })
+      .then(res => res.json())
+      .then(res => {
+        jadwalData[kelasAktif][index].mapel = res.mapel;
+        renderTabel();
+      })
+      .catch(err => console.error(err));
+    }
   }
 
-  function hapusJadwal(btn) {
+  function hapusJadwal(id, index) {
     if (confirm("Hapus jadwal ini?")) {
-      btn.closest('tr').remove();
-      const tbody = document.querySelector('#tabelJadwal tbody');
-      if (tbody.children.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="4" class="py-4 text-gray-500">Belum ada jadwal</td></tr>`;
-      }
+      fetch(`/api/jadwal/${id}`, { method: 'DELETE' })
+        .then(res => {
+          if (res.ok) {
+            jadwalData[kelasAktif].splice(index, 1);
+            renderTabel();
+          }
+        })
+        .catch(err => console.error(err));
     }
   }
 </script>
