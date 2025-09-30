@@ -1,21 +1,19 @@
-<section id="atur-jadwal" class="min-h-screen px-6 py-16 bg-white">
+<section id="atur-jadwal" class="px-6 py-10 bg-indigo-50">
+  <div class="max-w-6xl mx-auto space-y-8">
+
   <div class="max-w-5xl mx-auto">
     <h2 class="text-3xl font-bold text-indigo-700 mb-6">Atur Jadwal</h2>
-    <p class="text-gray-600 mb-8">Pilih angkatan & jurusan untuk menampilkan kelas.</p>
+    <p class="text-gray-600 mb-8">Pilih angkatan untuk menampilkan kelas.</p>
 
     <!-- Dropdown angkatan -->
     <div class="flex flex-wrap gap-4 mb-8">
-      <select id="angkatan" class="border rounded-lg px-4 py-2">
+      <select id="angkatan" class="border rounded-lg px-4 py-2" onchange="tampilkanKelas()">
         <option value="">-- Pilih Angkatan --</option>
+        <option value="all">Semua Angkatan</option>
         <option value="X">X</option>
         <option value="XI">XI</option>
         <option value="XII">XII</option>
       </select>
-
-      <button onclick="tampilkanKelas()" 
-              class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition">
-        Tampilkan Kelas
-      </button>
     </div>
 
     <!-- Daftar kelas -->
@@ -26,6 +24,16 @@
   <div id="jadwal-detail" class="hidden mt-16">
     <h3 id="judulKelas" class="text-2xl font-bold text-indigo-700 mb-4"></h3>
 
+    <!-- Filter Hari -->
+    <div class="mb-4">
+      <label class="mr-2 font-semibold">Filter Hari:</label>
+      <select id="filterHari" class="border rounded px-3 py-2" onchange="renderTabel()">
+        <option value="">Semua</option>
+        <option>Senin</option><option>Selasa</option><option>Rabu</option>
+        <option>Kamis</option><option>Jumat</option>
+      </select>
+    </div>
+
     <!-- Form tambah -->
     <form id="formTambah" class="flex flex-wrap gap-3 mb-6">
       <select name="hari" class="border rounded px-3 py-2">
@@ -35,101 +43,215 @@
 
       <input type="time" name="jamMulai" class="border rounded px-3 py-2">
       <input type="time" name="jamSelesai" class="border rounded px-3 py-2">
-      <input type="text" name="mapel" placeholder="Nama Mapel" class="border rounded px-3 py-2">
-      <input type="text" name="guru" placeholder="Nama Guru" class="border rounded px-3 py-2">         
+      <input type="text" name="mapel" placeholder="Mata Pelajaran / Kegiatan" class="border rounded px-3 py-2">
+      <input type="text" name="guru" placeholder="Nama Guru (opsional)" class="border rounded px-3 py-2">         
 
       <button type="button" onclick="tambahJadwal()"
               class="bg-green-600 text-white px-4 py-2 rounded-lg">➕ Tambah</button>
     </form>
 
-    <!-- Tabel jadwal -->
-    <div class="bg-white shadow rounded-xl overflow-hidden">
-      <table class="w-full text-center" id="tabelJadwal">
-        <thead class="bg-indigo-600 text-white">
-          <tr><th class="px-4 py-2">Hari</th><th>Jam</th><th>Mata Pelajaran</th><th>Guru</th><th>Aksi</th></tr>
-        </thead>
-        <tbody>
-          <tr><td colspan="5" class="py-4 text-gray-500">Belum ada jadwal</td></tr>
-        </tbody>
-      </table>
-    </div>
+    <!-- Jadwal -->
+    <div id="jadwalContainer" class="space-y-6"></div>
   </div>
 </section>
+
+<!-- Modal Edit -->
+<div id="modalEdit" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+  <div class="bg-white rounded-xl shadow-lg p-6 w-full max-w-lg">
+    <h3 class="text-xl font-bold mb-4">Edit Jadwal</h3>
+    <form id="formEdit" class="space-y-4">
+      <input type="hidden" name="id">
+
+      <div>
+        <label class="block font-semibold mb-1">Hari</label>
+        <select name="hari" class="border rounded px-3 py-2 w-full">
+          <option>Senin</option><option>Selasa</option><option>Rabu</option>
+          <option>Kamis</option><option>Jumat</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block font-semibold mb-1">Jam Mulai</label>
+        <input type="time" name="jamMulai" class="border rounded px-3 py-2 w-full">
+      </div>
+
+      <div>
+        <label class="block font-semibold mb-1">Jam Selesai</label>
+        <input type="time" name="jamSelesai" class="border rounded px-3 py-2 w-full">
+      </div>
+
+      <div>
+        <label class="block font-semibold mb-1">Mata Pelajaran / Kegiatan</label>
+        <input type="text" name="mapel" class="border rounded px-3 py-2 w-full">
+      </div>
+
+      <div>
+        <label class="block font-semibold mb-1">Nama Guru (opsional)</label>
+        <input type="text" name="guru" class="border rounded px-3 py-2 w-full">
+      </div>
+
+      <!-- Tambahan pilihan aksi -->
+          <div class="hidden">
+        <label class="block font-semibold mb-1">Terapkan perubahan ke:</label>
+        <select name="aksi" class="border rounded px-3 py-2 w-full">
+          <option value="satu">Hanya kelas ini</option>
+          <option value="massal">Semua kelas (massal)</option>
+        </select>
+      </div>
+
+
+      <div class="flex justify-end gap-3 mt-4">
+        <button type="button" onclick="closeModal()" class="px-4 py-2 rounded bg-gray-400 text-white">Batal</button>
+        <button type="button" onclick="updateJadwal()" class="px-4 py-2 rounded bg-blue-600 text-white">Simpan</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script src="https://unpkg.com/feather-icons"></script>
 
 <script>
   let kelasAktif = null;
   let jadwalData = {};
+  let editIndex = null;
 
   function tampilkanKelas() {
     const angkatan = document.getElementById('angkatan').value;
     const container = document.getElementById('kelasContainer');
+    const detail = document.getElementById('jadwal-detail');
     container.innerHTML = "";
 
+    if (!detail.classList.contains("hidden")) {
+      detail.classList.remove("animate__fadeInUp");
+      detail.classList.add("animate__fadeOutDown");
+      setTimeout(() => {
+        detail.classList.add("hidden");
+        detail.classList.remove("animate__fadeOutDown");
+      }, 400);
+    }
+
     if (!angkatan) {
-      alert("Pilih angkatan dulu!");
+      container.classList.add('hidden');
       return;
     }
 
     let kelasList = [];
-
     if (angkatan === "X") {
       kelasList = ["PPLG 1", "PPLG 2", "TJKT", "MPLB", "AKL"];
     } else if (angkatan === "XI" || angkatan === "XII") {
       kelasList = ["RPL 1", "RPL 2", "TKJ", "MP", "AK"];
+    } else if (angkatan === "all") {
+      kelasList = ["SEMUA KELAS"]; // untuk jadwal massal
     }
-
-    kelasList.forEach(kls => {
-      const btn = document.createElement("button");
-      btn.innerText = `${angkatan} ${kls}`;
-      btn.className = "block w-full bg-indigo-600 text-white text-center font-semibold py-6 rounded-xl shadow hover:bg-indigo-700 transition";
-      btn.onclick = () => openJadwal(`${angkatan} ${kls}`);
-      container.appendChild(btn);
-    });
 
     container.classList.remove('hidden');
-  }
+    container.classList.add("animate__animated", "animate__fadeInDown", "animate__faster");
 
-function openJadwal(kelas) {
-  kelasAktif = kelas;
-  document.getElementById('judulKelas').innerText = "Jadwal Kelas " + kelas;
-  document.getElementById('jadwal-detail').classList.remove('hidden');
+    kelasList.forEach((kls, i) => {
+      const btn = document.createElement("button");
+      btn.innerText = angkatan === "all" ? "Semua Angkatan" : `${angkatan} ${kls}`;
+      btn.className = "block w-full bg-indigo-600 text-white text-center font-semibold py-6 rounded-xl shadow hover:bg-indigo-700 transition opacity-0";
+      
+      setTimeout(() => {
+        btn.classList.add("animate__animated", "animate__fadeInUp");
+        btn.classList.remove("opacity-0");
+      }, i * 150);
 
-  // Encode biar spasi jadi %20
-  fetch(`/api/jadwal/${encodeURIComponent(kelas)}`)
-    .then(res => res.json())
-    .then(data => {
-      console.log("DATA DARI API:", data); // 👈 cek hasil
-      jadwalData[kelas] = data;
-      renderTabel();
-    })
-    .catch(err => console.error("ERROR API:", err));
-}
-
-
-  function renderTabel() {
-    const tbody = document.querySelector('#tabelJadwal tbody');
-    tbody.innerHTML = "";
-
-    if (!jadwalData[kelasAktif] || jadwalData[kelasAktif].length === 0) {
-      tbody.innerHTML = `<tr><td colspan="5" class="py-4 text-gray-500">Belum ada jadwal</td></tr>`;
-      return;
-    }
-
-    jadwalData[kelasAktif].forEach((item, index) => {
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${item.hari}</td>
-        <td>${item.jam_mulai} - ${item.jam_selesai}</td>
-        <td>${item.mapel}</td>
-        <td>${item.guru}</td>
-        <td class="flex gap-2 justify-center py-2">
-          <button onclick="editJadwal(${item.id}, ${index})" class="bg-yellow-500 text-white px-3 py-1 rounded">✏️</button>
-          <button onclick="hapusJadwal(${item.id}, ${index})" class="bg-red-600 text-white px-3 py-1 rounded">🗑️</button>
-        </td>
-      `;
-      tbody.appendChild(row);
+      btn.onclick = () => openJadwal(btn.innerText);
+      container.appendChild(btn);
     });
   }
+
+  function openJadwal(kelas) {
+    kelasAktif = kelas;
+    const detail = document.getElementById('jadwal-detail');
+    const judul = document.getElementById('judulKelas');
+    judul.innerText = "Jadwal " + kelas;
+
+    detail.classList.remove("animate__fadeInUp", "animate__fadeOutDown");
+    detail.classList.remove('hidden');
+    detail.classList.add("animate__animated", "animate__fadeInUp", "animate__faster");
+
+    fetch(`/api/jadwal/${encodeURIComponent(kelas)}`)
+      .then(res => res.json())
+      .then(data => {
+        jadwalData[kelas] = data;
+        renderTabel();
+        detail.style.animationDuration = "0.7s";
+      })
+      .catch(err => console.error("ERROR API:", err));
+  }
+
+function renderTabel() {
+  const container = document.getElementById('jadwalContainer');
+  container.innerHTML = "";
+
+  if (!jadwalData[kelasAktif] || jadwalData[kelasAktif].length === 0) {
+    container.innerHTML = `<p class="text-gray-500">Belum ada jadwal</p>`;
+    return;
+  }
+
+  const filterHari = document.getElementById('filterHari').value;
+  const grouped = {};
+  jadwalData[kelasAktif].forEach(item => {
+    if (!filterHari || item.hari === filterHari) {
+      if (!grouped[item.hari]) grouped[item.hari] = [];
+      grouped[item.hari].push(item);
+    }
+  });
+
+  // urutan tetap
+  const urutanHari = ["Senin","Selasa","Rabu","Kamis","Jumat"];
+
+  urutanHari.forEach(hari => {
+    if (grouped[hari]) {
+      const card = document.createElement("div");
+      card.className = "bg-white shadow rounded-xl p-4";
+
+      let html = `<h4 class="font-bold text-indigo-700 mb-2">${hari}</h4>`;
+      html += `
+        <table class="w-full text-center border">
+          <thead class="bg-indigo-600 text-white">
+            <tr>
+              <th>Jam</th>
+              <th>Mata Pelajaran / Kegiatan</th>
+              <th>Guru</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      grouped[hari].forEach((item, index) => {
+        const mulai = item.jam_mulai.slice(0, 5);
+        const selesai = item.jam_selesai.slice(0, 5);
+
+        html += `
+        <tr>
+          <td>${mulai} - ${selesai}</td>
+          <td>${item.mapel}</td>
+          <td>${item.guru ? item.guru : "-"}</td>
+          <td class="flex gap-2 justify-center py-2">
+            <button onclick="openEdit(${item.id}, ${index})" 
+                    class="bg-yellow-500 text-white p-2 rounded flex items-center justify-center">
+              <i data-feather="edit"></i>
+            </button>
+            <button onclick="hapusJadwal(${item.id}, ${index})" 
+                    class="bg-red-600 text-white p-2 rounded flex items-center justify-center">
+              <i data-feather="trash-2"></i>
+            </button>
+          </td>
+        </tr>
+      `;
+      });
+
+      html += "</tbody></table>";
+      card.innerHTML = html;
+      container.appendChild(card);
+    }
+  });
+  feather.replace();
+}
+
 
   function tambahJadwal() {
     const form = document.getElementById('formTambah');
@@ -139,11 +261,11 @@ function openJadwal(kelas) {
       jam_mulai: form.jamMulai.value,
       jam_selesai: form.jamSelesai.value,
       mapel: form.mapel.value,
-      guru: form.guru.value
+      guru: form.guru.value || ""
     };
 
-    if (!data.hari || !data.jam_mulai || !data.jam_selesai || !data.mapel || !data.guru) {
-      return alert("Lengkapi semua field!");
+    if (!data.hari || !data.jam_mulai || !data.jam_selesai || !data.mapel) {
+      return Swal.fire("Gagal", "Lengkapi semua field (guru opsional)!", "error");
     }
 
     fetch('/api/jadwal', {
@@ -157,37 +279,120 @@ function openJadwal(kelas) {
       jadwalData[kelasAktif].push(res);
       renderTabel();
       form.reset();
+      Swal.fire("Sukses", "Jadwal berhasil ditambahkan!", "success");
     })
     .catch(err => console.error(err));
   }
 
-  function editJadwal(id, index) {
-    const mapelBaru = prompt("Edit Mata Pelajaran:", jadwalData[kelasAktif][index].mapel);
-    if (mapelBaru) {
-      fetch(`/api/jadwal/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mapel: mapelBaru })
-      })
-      .then(res => res.json())
-      .then(res => {
-        jadwalData[kelasAktif][index].mapel = res.mapel;
-        renderTabel();
-      })
-      .catch(err => console.error(err));
-    }
+function openEdit(id, index) {
+  editIndex = index;
+  const item = jadwalData[kelasAktif][index];
+  const form = document.getElementById('formEdit');
+  
+  form.id.value = id;
+  form.hari.value = item.hari;
+  form.jamMulai.value = item.jam_mulai;
+  form.jamSelesai.value = item.jam_selesai;
+  form.mapel.value = item.mapel;
+  form.guru.value = item.guru || "";
+
+ // cek apakah massal
+const aksiField = form.querySelector('[name="aksi"]').parentElement;
+if (item.is_massal) {
+  aksiField.classList.remove('hidden');
+} else {
+  aksiField.classList.add('hidden');
+}
+
+
+  document.getElementById('modalEdit').classList.remove('hidden');
+}
+
+
+  function closeModal() {
+    document.getElementById('modalEdit').classList.add('hidden');
   }
 
-  function hapusJadwal(id, index) {
-    if (confirm("Hapus jadwal ini?")) {
-      fetch(`/api/jadwal/${id}`, { method: 'DELETE' })
-        .then(res => {
-          if (res.ok) {
-            jadwalData[kelasAktif].splice(index, 1);
-            renderTabel();
-          }
-        })
-        .catch(err => console.error(err));
-    }
+  function updateJadwal() {
+    const form = document.getElementById('formEdit');
+    const data = {
+      id: form.id.value,
+      kelas: kelasAktif,
+      hari: form.hari.value,
+      jam_mulai: form.jamMulai.value,
+      jam_selesai: form.jamSelesai.value,
+      mapel: form.mapel.value,
+      guru: form.guru.value || "",
+      aksi: form.aksi.value
+    };
+
+    fetch(`/api/jadwal/${data.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(res => {
+      jadwalData[kelasAktif][editIndex] = res;
+      renderTabel();
+      closeModal();
+      Swal.fire("Sukses", "Jadwal berhasil diperbarui!", "success");
+    })
+    .catch(err => console.error(err));
   }
+
+ function hapusJadwal(id, index) {
+  const item = jadwalData[kelasAktif][index];
+
+  if (item.massal) {
+    // kalau massal → tampilkan pilihan hapus satu / semua
+    Swal.fire({
+      title: "Hapus jadwal?",
+      text: "Pilih apakah hapus hanya kelas ini atau semua kelas.",
+      icon: "warning",
+      showCancelButton: true,
+      showDenyButton: true,
+      confirmButtonText: "Hanya kelas ini",
+      denyButtonText: "Semua kelas (massal)",
+      cancelButtonText: "Batal"
+    }).then((result) => {
+      let aksi = null;
+      if (result.isConfirmed) aksi = "satu";
+      if (result.isDenied) aksi = "massal";
+
+      if (aksi) {
+        fetch(`/api/jadwal/${id}?aksi=${aksi}`, { method: 'DELETE' })
+          .then(res => {
+            if (res.ok) {
+              jadwalData[kelasAktif] = jadwalData[kelasAktif].filter(item => item.id !== id);
+              renderTabel();
+              Swal.fire("Terhapus!", "Jadwal berhasil dihapus.", "success");
+            }
+          })
+          .catch(err => console.error(err));
+      }
+    });
+  } else {
+    // kalau bukan massal → tampilkan swal biasa
+    Swal.fire({
+      title: "Hapus jadwal?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Ya, hapus",
+      cancelButtonText: "Batal"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        fetch(`/api/jadwal/${id}`, { method: 'DELETE' })
+          .then(res => {
+            if (res.ok) {
+              jadwalData[kelasAktif] = jadwalData[kelasAktif].filter(item => item.id !== id);
+              renderTabel();
+              Swal.fire("Terhapus!", "Jadwal berhasil dihapus.", "success");
+            }
+          })
+          .catch(err => console.error(err));
+      }
+    });
+  }
+}
 </script>

@@ -14,7 +14,8 @@ return new class extends Migration {
             $table->time('jam_mulai');
             $table->time('jam_selesai');
             $table->string('mapel');
-            $table->string('guru');
+            $table->string('guru')->nullable(); // Nama guru, bisa null
+            $table->boolean('is_massal')->default(false); // penanda jadwal massal
             $table->timestamps();
         });
     }

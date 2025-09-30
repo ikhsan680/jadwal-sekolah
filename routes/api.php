@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\JadwalController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -17,3 +19,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/jadwal/{kelas}', [JadwalController::class, 'index']);
+Route::post('/jadwal', [JadwalController::class, 'store']);
+Route::put('/jadwal/{id}', [JadwalController::class, 'update']);
+Route::delete('/jadwal/{id}', [JadwalController::class, 'destroy']);

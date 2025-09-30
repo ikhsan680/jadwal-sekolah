@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard Guru - SmartJadwal</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
   <style>
     html { scroll-behavior: smooth; }
   </style>
@@ -52,15 +54,15 @@
   <!-- CONTENT -->
   <div id="content" class="transition-all duration-300">
     <!-- HEADER -->
-    <header class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md">
-      <div class="flex items-center justify-between px-10 py-4 w-full">
-        <div class="flex items-center gap-3">
-          <button id="btnMenu" class="text-3xl focus:outline-none hover:scale-110 transition">☰</button>
-          <h1 class="font-bold text-2xl tracking-wide pl-3">SmartJadwal</h1>
-        </div>
-        <a href="#" class="font-semibold text-lg px-3 py-2 rounded hover:bg-white/20 transition mr-5">Kontak</a>
-      </div>
-    </header>
+<header class="sticky top-0 z-40 bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md">
+  <div class="flex items-center justify-between px-10 py-4 w-full">
+    <div class="flex items-center gap-3">
+      <button id="btnMenu" class="text-3xl focus:outline-none hover:scale-110 transition">☰</button>
+      <h1 class="font-bold text-2xl tracking-wide pl-3">SmartJadwal</h1>
+    </div>
+    <a href="#" class="font-semibold text-lg px-3 py-2 rounded hover:bg-white/20 transition mr-5">Kontak</a>
+  </div>
+</header> 
 
     <!-- SECTION (dipanggil dari file lain) -->
     @include('guru.sections.home')

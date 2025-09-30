@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\GuruController;
-use App\Http\Controllers\JadwalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,7 +48,3 @@ Route::post('/guru/login', [GuruController::class, 'login'])->name('guru.login.s
 Route::get('/guru/dashboard', [GuruController::class, 'dashboard'])->name('guru.dashboard');
 Route::post('/guru/logout', [GuruController::class, 'logout'])->name('guru.logout');
 
-Route::get('/jadwal/{kelas}', [JadwalController::class, 'index']);
-Route::post('/jadwal', [JadwalController::class, 'store']);
-Route::put('/jadwal/{id}', [JadwalController::class, 'update']);
-Route::delete('/jadwal/{id}', [JadwalController::class, 'destroy']);
