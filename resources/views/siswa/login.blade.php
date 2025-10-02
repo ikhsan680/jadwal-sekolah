@@ -41,6 +41,13 @@
          focus:border-indigo-500 bg-white shadow-sm">
 
         </div>
+<div>
+  <label class="block text-sm font-medium text-gray-700 mb-1">NIS</label>
+  <input type="text" name="nis" placeholder="Masukkan NIS" required
+    class="w-full text-base border border-indigo-300 rounded-lg px-4 py-3 
+           focus:outline-none focus:ring-2 focus:ring-indigo-500 
+           focus:border-indigo-500 bg-white shadow-sm">
+</div>
 
       <!-- Pilih Sekolah -->
       <div>

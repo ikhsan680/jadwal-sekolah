@@ -57,3 +57,6 @@ Route::post('/guru/login', [GuruController::class, 'login'])->name('guru.login.s
 Route::get('/guru/dashboard', [GuruController::class, 'dashboard'])->name('guru.dashboard');
 Route::post('/guru/logout', [GuruController::class, 'logout'])->name('guru.logout');
 
+Route::get('/kontak', function () {
+    return view('kontak'); // ini file resources/views/kontak.blade.php
+});

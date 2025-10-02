@@ -30,64 +30,57 @@
 
     <!-- HEADER -->
     <header class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md">
-      <div class="flex items-center justify-between px-10 py-4 w-full">
+      <div class="flex items-center justify-between px-6 md:px-10 py-4 w-full">
         <div class="flex items-center gap-3">
           <button id="btnMenu" class="text-3xl focus:outline-none hover:scale-110 transition">
             ☰
           </button>
-          <h1 class="font-bold text-3xl tracking-wide pl-3">
+          <h1 class="font-bold text-2xl md:text-3xl tracking-wide pl-2 md:pl-3">
             SmartJadwal
           </h1>
         </div>
-        <a href="#"
-           class="font-bold text-2xl px-3 py-2 rounded hover:bg-white/20 transition mr-5">
-          Kontak
-        </a>
+       <a href="/kontak"
+   class="font-bold text-lg md:text-xl px-3 py-2 rounded hover:bg-white/20 transition mr-2 md:mr-5">
+  Kontak
+</a>
       </div>
     </header>
 
     <!-- HERO -->
-    <section id="hero"
-             class="max-w-7xl mx-auto px-6 lg:px-12 mt-16 lg:mt-24">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        <!-- TEKS -->
-        <div>
-          <p class="uppercase text-indigo-600 font-semibold tracking-wide mb-3">
-            Jadwal Sekolah Digital
-          </p>
-          <h2 class="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
-            Cek Jadwal Pelajaran <br>
-            Lebih Cepat & Praktis
-          </h2>
-          <p class="mt-5 text-gray-700 text-lg">
-            SmartJadwal membantu siswa melihat jadwal pelajaran setiap hari
-            dan memudahkan guru untuk menambah atau mengubah jadwal dengan mudah.
-          </p>
-          <div class="mt-8 flex gap-4">
-            <a href="/pilih"
-               class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded shadow transition">
-              Coba Sekarang
-            </a>
-          </div>
-        </div>
-        <!-- GAMBAR / MOCKUP -->
-        <div class="relative">
-          <div class="absolute -top-6 -left-6 w-40 h-40 bg-yellow-300 rounded-full opacity-80"></div>
-          <img src="https://via.placeholder.com/450x300"
-               alt="Mockup aplikasi"
-               class="relative z-10 rounded-xl shadow-lg">
-        </div>
+<section id="hero"
+         class="max-w-7xl mx-auto px-6 lg:px-12 mt-16 lg:mt-24">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+    <!-- TEKS -->
+    <div class="text-left pl-4"> <!-- Tambahin text-left + padding kiri -->
+      <p class="uppercase text-indigo-600 font-semibold tracking-wide mb-3">
+        Jadwal Sekolah Digital
+      </p>
+      <h2 class="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
+        Cek Jadwal Pelajaran <br>
+        Lebih Cepat & Praktis
+      </h2>
+      <p class="mt-5 text-gray-700 text-lg max-w-xl">
+        SmartJadwal membantu siswa melihat jadwal pelajaran setiap hari
+        dan memudahkan guru untuk menambah atau mengubah jadwal dengan mudah.
+      </p>
+      <div class="mt-8 flex gap-4">
+        <a href="/pilih"
+           class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded shadow transition">
+          Coba Sekarang
+        </a>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
+
 
     <!-- MENGAPA MEMILIH SMARTJADWAL -->
-    <section id="features"
-             class="max-w-7xl mx-auto px-6 lg:px-12 mt-24">
-      <h3 class="text-3xl font-bold text-center text-gray-900 mb-12">
+    <section id="features" class="max-w-7xl mx-auto px-6 lg:px-12 mt-20 md:mt-24">
+      <h3 class="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-12">
         Mengapa Memilih SmartJadwal?
       </h3>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 text-center">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10 text-center">
         <!-- Fitur 1 -->
         <div class="flex flex-col items-center">
           <div class="w-12 h-12 flex items-center justify-center rounded-full bg-blue-600 text-white mb-4">
@@ -98,7 +91,7 @@
             </svg>
           </div>
           <h4 class="text-lg font-semibold mb-2">Akses Cepat & Real-Time</h4>
-          <p class="text-gray-600 text-sm">
+          <p class="text-gray-600 text-sm md:text-base">
             Siswa dapat melihat jadwal pelajaran secara langsung tanpa menunggu update manual.
           </p>
         </div>
@@ -113,7 +106,7 @@
             </svg>
           </div>
           <h4 class="text-lg font-semibold mb-2">Manajemen Jadwal</h4>
-          <p class="text-gray-600 text-sm">
+          <p class="text-gray-600 text-sm md:text-base">
             Atur jadwal pelajaran kapan saja, di mana saja, dengan antarmuka yang sederhana.
           </p>
         </div>
@@ -128,7 +121,7 @@
             </svg>
           </div>
           <h4 class="text-lg font-semibold mb-2">Input Jadwal Mudah</h4>
-          <p class="text-gray-600 text-sm">
+          <p class="text-gray-600 text-sm md:text-base">
             Guru bisa menambah atau memperbarui jadwal pelajaran dengan cepat tanpa rumit.
           </p>
         </div>
@@ -143,7 +136,7 @@
             </svg>
           </div>
           <h4 class="text-lg font-semibold mb-2">Tampilan Modern</h4>
-          <p class="text-gray-600 text-sm">
+          <p class="text-gray-600 text-sm md:text-base">
             Antarmuka elegan yang mudah digunakan baik di komputer maupun ponsel.
           </p>
         </div>
@@ -151,7 +144,7 @@
     </section>
 
     <!-- FOOTER -->
-    <footer class="mt-24 text-center text-gray-500 text-sm py-6">
+    <footer class="mt-16 md:mt-24 text-center text-gray-500 text-sm py-6">
       © 2025 SmartJadwal. All rights reserved.
     </footer>
   </div>
@@ -166,14 +159,14 @@
       sidebar.classList.remove('-translate-x-full');
       btnClose.classList.remove('hidden');
       btnMenu.classList.add('hidden');
-      content.classList.add('ml-64');   // geser semua konten
+      content.classList.add('ml-64');   // geser konten saat sidebar terbuka
     });
 
     btnClose.addEventListener('click', () => {
       sidebar.classList.add('-translate-x-full');
       btnClose.classList.add('hidden');
       btnMenu.classList.remove('hidden');
-      content.classList.remove('ml-64'); // kembalikan ke posisi semula
+      content.classList.remove('ml-64');
     });
   </script>
 

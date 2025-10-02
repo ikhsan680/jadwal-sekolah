@@ -2,7 +2,7 @@
   <div class="max-w-6xl mx-auto space-y-8">
 
   <div class="max-w-5xl mx-auto">
-    <h2 class="text-3xl font-bold text-indigo-700 mb-6">Atur Jadwal</h2>
+    <h2 class="text-5xl font-bold text-indigo-700 mb-6">Atur Jadwal</h2>
     <p class="text-gray-600 mb-8">Pilih angkatan untuk menampilkan kelas.</p>
 
     <!-- Dropdown angkatan -->
@@ -108,7 +108,6 @@
   </div>
 </div>
 <script src="https://unpkg.com/feather-icons"></script>
-
 <script>
   let kelasAktif = null;
   let jadwalData = {};
@@ -181,77 +180,77 @@
       .catch(err => console.error("ERROR API:", err));
   }
 
-function renderTabel() {
-  const container = document.getElementById('jadwalContainer');
-  container.innerHTML = "";
+  // ✅ FIXED renderTabel
+  function renderTabel() {
+    const container = document.getElementById('jadwalContainer');
+    container.innerHTML = "";
 
-  if (!jadwalData[kelasAktif] || jadwalData[kelasAktif].length === 0) {
-    container.innerHTML = `<p class="text-gray-500">Belum ada jadwal</p>`;
-    return;
-  }
-
-  const filterHari = document.getElementById('filterHari').value;
-  const grouped = {};
-  jadwalData[kelasAktif].forEach(item => {
-    if (!filterHari || item.hari === filterHari) {
-      if (!grouped[item.hari]) grouped[item.hari] = [];
-      grouped[item.hari].push(item);
+    if (!jadwalData[kelasAktif] || jadwalData[kelasAktif].length === 0) {
+      container.innerHTML = `<p class="text-gray-500">Belum ada jadwal</p>`;
+      return;
     }
-  });
 
-  // urutan tetap
-  const urutanHari = ["Senin","Selasa","Rabu","Kamis","Jumat"];
+    const filterHari = document.getElementById('filterHari').value;
+    const grouped = {};
+    jadwalData[kelasAktif].forEach(item => {
+      if (!filterHari || item.hari === filterHari) {
+        if (!grouped[item.hari]) grouped[item.hari] = [];
+        grouped[item.hari].push(item);
+      }
+    });
 
-  urutanHari.forEach(hari => {
-    if (grouped[hari]) {
-      const card = document.createElement("div");
-      card.className = "bg-white shadow rounded-xl p-4";
+    const urutanHari = ["Senin","Selasa","Rabu","Kamis","Jumat"];
 
-      let html = `<h4 class="font-bold text-indigo-700 mb-2">${hari}</h4>`;
-      html += `
-        <table class="w-full text-center border">
-          <thead class="bg-indigo-600 text-white">
-            <tr>
-              <th>Jam</th>
-              <th>Mata Pelajaran / Kegiatan</th>
-              <th>Guru</th>
-              <th>Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-      `;
+    urutanHari.forEach(hari => {
+      if (grouped[hari]) {
+        const card = document.createElement("div");
+        card.className = "bg-white shadow rounded-xl p-4";
 
-      grouped[hari].forEach((item, index) => {
-        const mulai = item.jam_mulai.slice(0, 5);
-        const selesai = item.jam_selesai.slice(0, 5);
-
+        let html = `<h4 class="font-bold text-indigo-700 mb-2">${hari}</h4>`;
         html += `
-        <tr>
-          <td>${mulai} - ${selesai}</td>
-          <td>${item.mapel}</td>
-          <td>${item.guru ? item.guru : "-"}</td>
-          <td class="flex gap-2 justify-center py-2">
-            <button onclick="openEdit(${item.id}, ${index})" 
-                    class="bg-yellow-500 text-white p-2 rounded flex items-center justify-center">
-              <i data-feather="edit"></i>
-            </button>
-            <button onclick="hapusJadwal(${item.id}, ${index})" 
-                    class="bg-red-600 text-white p-2 rounded flex items-center justify-center">
-              <i data-feather="trash-2"></i>
-            </button>
-          </td>
-        </tr>
-      `;
-      });
+          <table class="w-full text-center border">
+            <thead class="bg-indigo-600 text-white">
+              <tr>
+                <th>Jam</th>
+                <th>Mata Pelajaran / Kegiatan</th>
+                <th>Guru</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+        `;
 
-      html += "</tbody></table>";
-      card.innerHTML = html;
-      container.appendChild(card);
-    }
-  });
-  feather.replace();
-}
+        grouped[hari].forEach((item) => {
+          const mulai = item.jam_mulai.slice(0, 5);
+          const selesai = item.jam_selesai.slice(0, 5);
+          const globalIndex = jadwalData[kelasAktif].findIndex(i => i.id === item.id);
 
+          html += `
+          <tr>
+            <td>${mulai} - ${selesai}</td>
+            <td>${item.mapel}</td>
+            <td>${item.guru ? item.guru : "-"}</td>
+            <td class="flex gap-2 justify-center py-2">
+              <button onclick="openEdit(${item.id}, ${globalIndex})" 
+                      class="bg-yellow-500 text-white p-2 rounded flex items-center justify-center">
+                <i data-feather="edit"></i>
+              </button>
+              <button onclick="hapusJadwal(${item.id}, ${globalIndex})" 
+                      class="bg-red-600 text-white p-2 rounded flex items-center justify-center">
+                <i data-feather="trash-2"></i>
+              </button>
+            </td>
+          </tr>
+        `;
+        });
+
+        html += "</tbody></table>";
+        card.innerHTML = html;
+        container.appendChild(card);
+      }
+    });
+    feather.replace();
+  }
 
   function tambahJadwal() {
     const form = document.getElementById('formTambah');
@@ -284,35 +283,37 @@ function renderTabel() {
     .catch(err => console.error(err));
   }
 
-function openEdit(id, index) {
-  editIndex = index;
-  const item = jadwalData[kelasAktif][index];
-  const form = document.getElementById('formEdit');
-  
-  form.id.value = id;
-  form.hari.value = item.hari;
-  form.jamMulai.value = item.jam_mulai;
-  form.jamSelesai.value = item.jam_selesai;
-  form.mapel.value = item.mapel;
-  form.guru.value = item.guru || "";
+  // ✅ FIXED openEdit
+  function openEdit(id, index) {
+    const idx = (typeof index === 'number' && index >= 0) ? index : jadwalData[kelasAktif].findIndex(i => i.id === id);
+    if (idx === -1) { console.error('Item jadwal tidak ditemukan', id); return; }
 
- // cek apakah massal
-const aksiField = form.querySelector('[name="aksi"]').parentElement;
-if (item.is_massal) {
-  aksiField.classList.remove('hidden');
-} else {
-  aksiField.classList.add('hidden');
-}
+    editIndex = idx;
+    const item = jadwalData[kelasAktif][idx];
+    const form = document.getElementById('formEdit');
+    
+    form.id.value = item.id;
+    form.hari.value = item.hari;
+    form.jamMulai.value = item.jam_mulai;
+    form.jamSelesai.value = item.jam_selesai;
+    form.mapel.value = item.mapel;
+    form.guru.value = item.guru || "";
 
+    const aksiField = form.querySelector('[name="aksi"]').parentElement;
+    if (item.is_massal || item.massal) {
+      aksiField.classList.remove('hidden');
+    } else {
+      aksiField.classList.add('hidden');
+    }
 
-  document.getElementById('modalEdit').classList.remove('hidden');
-}
-
+    document.getElementById('modalEdit').classList.remove('hidden');
+  }
 
   function closeModal() {
     document.getElementById('modalEdit').classList.add('hidden');
   }
 
+  // ✅ FIXED updateJadwal
   function updateJadwal() {
     const form = document.getElementById('formEdit');
     const data = {
@@ -333,7 +334,8 @@ if (item.is_massal) {
     })
     .then(res => res.json())
     .then(res => {
-      jadwalData[kelasAktif][editIndex] = res;
+      const idx = jadwalData[kelasAktif].findIndex(i => i.id == res.id);
+      if (idx !== -1) jadwalData[kelasAktif][idx] = res;
       renderTabel();
       closeModal();
       Swal.fire("Sukses", "Jadwal berhasil diperbarui!", "success");
@@ -341,58 +343,60 @@ if (item.is_massal) {
     .catch(err => console.error(err));
   }
 
- function hapusJadwal(id, index) {
-  const item = jadwalData[kelasAktif][index];
+  // ✅ FIXED hapusJadwal
+  function hapusJadwal(id, index) {
+    const idx = (typeof index === 'number' && index >= 0) ? index : jadwalData[kelasAktif].findIndex(i => i.id === id);
+    if (idx === -1) { console.error('Item jadwal tidak ditemukan', id); return; }
 
-  if (item.massal) {
-    // kalau massal → tampilkan pilihan hapus satu / semua
-    Swal.fire({
-      title: "Hapus jadwal?",
-      text: "Pilih apakah hapus hanya kelas ini atau semua kelas.",
-      icon: "warning",
-      showCancelButton: true,
-      showDenyButton: true,
-      confirmButtonText: "Hanya kelas ini",
-      denyButtonText: "Semua kelas (massal)",
-      cancelButtonText: "Batal"
-    }).then((result) => {
-      let aksi = null;
-      if (result.isConfirmed) aksi = "satu";
-      if (result.isDenied) aksi = "massal";
+    const item = jadwalData[kelasAktif][idx];
 
-      if (aksi) {
-        fetch(`/api/jadwal/${id}?aksi=${aksi}`, { method: 'DELETE' })
-          .then(res => {
-            if (res.ok) {
-              jadwalData[kelasAktif] = jadwalData[kelasAktif].filter(item => item.id !== id);
-              renderTabel();
-              Swal.fire("Terhapus!", "Jadwal berhasil dihapus.", "success");
-            }
-          })
-          .catch(err => console.error(err));
-      }
-    });
-  } else {
-    // kalau bukan massal → tampilkan swal biasa
-    Swal.fire({
-      title: "Hapus jadwal?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Ya, hapus",
-      cancelButtonText: "Batal"
-    }).then((result) => {
-      if (result.isConfirmed) {
-        fetch(`/api/jadwal/${id}`, { method: 'DELETE' })
-          .then(res => {
-            if (res.ok) {
-              jadwalData[kelasAktif] = jadwalData[kelasAktif].filter(item => item.id !== id);
-              renderTabel();
-              Swal.fire("Terhapus!", "Jadwal berhasil dihapus.", "success");
-            }
-          })
-          .catch(err => console.error(err));
-      }
-    });
+    if (item.is_massal || item.massal) {
+      Swal.fire({
+        title: "Hapus jadwal?",
+        text: "Pilih apakah hapus hanya kelas ini atau semua kelas.",
+        icon: "warning",
+        showCancelButton: true,
+        showDenyButton: true,
+        confirmButtonText: "Hanya kelas ini",
+        denyButtonText: "Semua kelas (massal)",
+        cancelButtonText: "Batal"
+      }).then((result) => {
+        let aksi = null;
+        if (result.isConfirmed) aksi = "satu";
+        if (result.isDenied) aksi = "massal";
+
+        if (aksi) {
+          fetch(`/api/jadwal/${id}?aksi=${aksi}`, { method: 'DELETE' })
+            .then(res => {
+              if (res.ok) {
+                jadwalData[kelasAktif] = jadwalData[kelasAktif].filter(i => i.id !== id);
+                renderTabel();
+                Swal.fire("Terhapus!", "Jadwal berhasil dihapus.", "success");
+              }
+            })
+            .catch(err => console.error(err));
+        }
+      });
+    } else {
+      Swal.fire({
+        title: "Hapus jadwal?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Ya, hapus",
+        cancelButtonText: "Batal"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          fetch(`/api/jadwal/${id}`, { method: 'DELETE' })
+            .then(res => {
+              if (res.ok) {
+                jadwalData[kelasAktif] = jadwalData[kelasAktif].filter(i => i.id !== id);
+                renderTabel();
+                Swal.fire("Terhapus!", "Jadwal berhasil dihapus.", "success");
+              }
+            })
+            .catch(err => console.error(err));
+        }
+      });
+    }
   }
-}
 </script>

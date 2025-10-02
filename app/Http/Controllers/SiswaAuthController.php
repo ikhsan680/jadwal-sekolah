@@ -40,13 +40,13 @@ class SiswaAuthController extends Controller
    public function login(Request $request)
 {
     $request->validate([
-        'nama'     => 'required|string',
+        'nis'      => 'required|string',
         'sekolah'  => 'required|string',
         'angkatan' => 'required|string',
         'kelas'    => 'required|string',
     ]);
 
-    $siswa = Siswa::where('nama', $request->nama)
+    $siswa = Siswa::where('nis', $request->nis)
         ->where('sekolah', $request->sekolah)
         ->where('angkatan', $request->angkatan)
         ->where('kelas', $request->kelas)
@@ -57,8 +57,9 @@ class SiswaAuthController extends Controller
         return redirect()->route('siswa.dashboard');
     }
 
-    return back()->withErrors(['nama' => 'Data siswa tidak ditemukan.']);
+    return back()->withErrors(['login' => 'Data siswa tidak ditemukan atau salah.']);
 }
+
 
 
 

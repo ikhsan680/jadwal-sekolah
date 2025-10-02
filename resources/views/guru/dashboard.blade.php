@@ -60,7 +60,6 @@
       <button id="btnMenu" class="text-3xl focus:outline-none hover:scale-110 transition">☰</button>
       <h1 class="font-bold text-2xl tracking-wide pl-3">SmartJadwal</h1>
     </div>
-    <a href="#" class="font-semibold text-lg px-3 py-2 rounded hover:bg-white/20 transition mr-5">Kontak</a>
   </div>
 </header> 
 

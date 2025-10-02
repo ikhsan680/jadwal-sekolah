@@ -122,7 +122,7 @@
     const kelasOptions = {
       X: ["X PPLG 1", "X PPLG 2", "X TJKT", "X MPLB", "X AKL"],
       XI: ["XI RPL 1", "XI RPL 2", "XI TKJ", "XI MP", "XI AK"],
-      XII: ["XI RPL 1", "XI RPL 2", "XI TKJ", "XI MP", "XI AK"] 
+      XII: ["XII RPL 1", "XII RPL 2", "XII TKJ", "XII MP", "XII AK"] 
     };
 
     const angkatanSelect = document.getElementById("angkatanSelect");
