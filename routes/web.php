@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\SiswaController;
+use App\Http\Controllers\SiswaAuthController;
 use App\Http\Controllers\GuruController;
 
 /*
@@ -31,10 +31,19 @@ Route::get('/pilih', function () {
 | Login Siswa
 |--------------------------------------------------------------------------
 */
-Route::get('/siswa/login', [SiswaController::class, 'showLoginForm'])->name('siswa.login');
-Route::post('/siswa/login', [SiswaController::class, 'login'])->name('siswa.login.submit');
-Route::get('/siswa/dashboard', [SiswaController::class, 'dashboard'])->name('siswa.dashboard');
-Route::post('/siswa/logout', [SiswaController::class, 'logout'])->name('siswa.logout');
+Route::prefix('siswa')->group(function () {
+    Route::get('/register', [SiswaAuthController::class, 'showRegister'])->name('siswa.register');
+    Route::post('/register', [SiswaAuthController::class, 'register'])->name('siswa.register.submit');
+
+    Route::get('/login', [SiswaAuthController::class, 'showLogin'])->name('siswa.login');
+    Route::post('/login', [SiswaAuthController::class, 'login'])->name('siswa.login.submit');
+
+    Route::middleware('auth:siswa')->group(function () {
+        Route::get('/dashboard', [SiswaAuthController::class, 'dashboard'])->name('siswa.dashboard');
+        Route::post('/logout', [SiswaAuthController::class, 'logout'])->name('siswa.logout');
+    });
+});
+
 
 /*
 |--------------------------------------------------------------------------

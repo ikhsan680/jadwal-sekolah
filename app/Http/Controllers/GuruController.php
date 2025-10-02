@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Guru;
-use Illuminate\Support\Facades\Hash;
 
 class GuruController extends Controller
 {
@@ -18,10 +17,9 @@ class GuruController extends Controller
         $request->validate([
             'username' => 'required|string|max:255',
             'sekolah'  => 'required|string|max:255',
-            'nip'      => 'required|string|max:100|unique:guru,nip', // kalau pakai tabel 'guru'
+            'nip'      => 'required|string|max:100|unique:guru,nip',
         ]);
 
-        // Simpan ke DB (table 'guru' sesuai model)
         Guru::create([
             'username' => $request->username,
             'sekolah'  => $request->sekolah,
@@ -33,54 +31,34 @@ class GuruController extends Controller
 
     public function showLoginForm()
     {
-        return view('guru.login'); // pastikan view path sesuai
+        return view('guru.login');
     }
 
     public function login(Request $request)
-{
-    $request->validate([
-        'username' => 'required|string',
-        'sekolah'  => 'required|string',
-        'kode'     => 'required|string',
-    ]);
+    {
+        $request->validate([
+            'username' => 'required|string',
+            'sekolah'  => 'required|string',
+            'nip'      => 'required|string',
+        ]);
 
-    // cari guru di database berdasarkan username + sekolah
-    $guru = \App\Models\Guru::where('username', $request->username)
-                ->where('sekolah', $request->sekolah)
-                ->first();
+        // Cari guru berdasarkan username, sekolah, dan nip
+        $guru = Guru::where('username', $request->username)
+                    ->where('sekolah', $request->sekolah)
+                    ->where('nip', $request->nip)
+                    ->first();
 
-    if (!$guru) {
-        return back()->withErrors(['login' => 'Username atau sekolah tidak terdaftar!'])
-                     ->withInput($request->only('username','sekolah'));
+        if (!$guru) {
+            return back()->withErrors(['login' => 'Username, sekolah, atau NIP salah!'])
+                         ->withInput($request->only('username','sekolah','nip'));
+        }
+
+        // sukses → simpan guru ke session
+        session(['guru' => $guru]);
+
+        return redirect()->route('guru.dashboard')
+                         ->with('success','Berhasil login.');
     }
-
-    // cek kode global
-    $kodeInput = $request->kode;
-    $kodeBenar = env('GURU_LOGIN_CODE');
-
-    // opsi: jika pakai hash di .env
-    $kodeHash = env('GURU_LOGIN_CODE_HASH');
-
-    $validKode = false;
-    if ($kodeBenar && hash_equals($kodeBenar, $kodeInput)) {
-        $validKode = true;
-    }
-    if ($kodeHash && \Illuminate\Support\Facades\Hash::check($kodeInput, $kodeHash)) {
-        $validKode = true;
-    }
-
-    if (!$validKode) {
-        return back()->withErrors(['login' => 'Kode guru salah!'])
-                     ->withInput($request->only('username','sekolah'));
-    }
-
-    // sukses → simpan guru ke session
-    session(['guru' => $guru]);
-
-    return redirect()->route('guru.dashboard')
-                     ->with('success','Berhasil login.');
-}
-
 
     public function dashboard()
     {
