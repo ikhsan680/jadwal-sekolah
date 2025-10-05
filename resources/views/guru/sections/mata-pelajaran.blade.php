@@ -1,42 +1,44 @@
-<section id="mata-pelajaran" class="px-6 py-12 bg-indigo-50">
+<section id="mata-pelajaran" class="px-4 sm:px-6 py-12 bg-indigo-50">
   <div class="max-w-6xl mx-auto space-y-6">
     <h2 class="text-3xl font-bold text-indigo-700 text-center">Jadwal Harian</h2>
 
     <!-- Dropdown Angkatan & Kelas -->
-    <div class="flex justify-center gap-4 mb-4">
-      <select id="angkatanSelect" class="border rounded-lg px-4 py-2" onchange="loadKelas()">
+    <div class="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4 mb-4">
+      <select id="angkatanSelect" class="border rounded-lg px-4 py-2 w-full sm:w-auto" onchange="loadKelas()">
         <option value="">-- Pilih Angkatan --</option>
         <option value="X">X</option>
         <option value="XI">XI</option>
         <option value="XII">XII</option>
       </select>
 
-      <select id="kelasSelect" class="border rounded-lg px-4 py-2" onchange="tampilkanJadwal()">
+      <select id="kelasSelect" class="border rounded-lg px-4 py-2 w-full sm:w-auto" onchange="tampilkanJadwal()">
         <option value="">-- Pilih Kelas --</option>
       </select>
 
       <button id="btnDownloadPDF" onclick="downloadPDF()" 
-              class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition hidden">
+              class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition hidden w-full sm:w-auto">
         📄 Download PDF
       </button>
     </div>
 
     <!-- Tabel jadwal -->
     <div id="jadwalContainer" class="bg-white shadow-lg rounded-xl overflow-hidden">
-      <div class="overflow-x-auto">
-        <table class="w-full border-collapse text-center">
+      <div class="overflow-x-auto w-full">
+        <table class="min-w-[600px] sm:min-w-full border-collapse text-center text-sm sm:text-base">
           <thead class="bg-indigo-600 text-white">
             <tr>
-              <th class="px-4 py-3">Senin</th>
-              <th class="px-4 py-3">Selasa</th>
-              <th class="px-4 py-3">Rabu</th>
-              <th class="px-4 py-3">Kamis</th>
-              <th class="px-4 py-3">Jumat</th>
+              <th class="px-3 sm:px-4 py-2 sm:py-3">Senin</th>
+              <th class="px-3 sm:px-4 py-2 sm:py-3">Selasa</th>
+              <th class="px-3 sm:px-4 py-2 sm:py-3">Rabu</th>
+              <th class="px-3 sm:px-4 py-2 sm:py-3">Kamis</th>
+              <th class="px-3 sm:px-4 py-2 sm:py-3">Jumat</th>
             </tr>
           </thead>
           <tbody id="tbodyJadwal">
             <tr>
-              <td colspan="5" class="px-4 py-3 text-gray-500">Pilih angkatan dan kelas untuk menampilkan jadwal.</td>
+              <td colspan="5" class="px-4 py-3 text-gray-500 text-sm sm:text-base">
+                Pilih angkatan dan kelas untuk menampilkan jadwal.
+              </td>
             </tr>
           </tbody>
         </table>
@@ -44,6 +46,7 @@
     </div>
   </div>
 </section>
+
 
 <!-- jsPDF dan AutoTable -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -173,4 +176,3 @@
     }
   }
 </script>
-```

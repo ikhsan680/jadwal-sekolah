@@ -15,10 +15,12 @@
 
   <!-- SIDEBAR -->
   <aside id="sidebar"
-         class="fixed top-0 left-0 h-full w-64 bg-gradient-to-b from-indigo-700 to-indigo-900 text-white p-6 transform -translate-x-full transition-transform duration-300 ease-in-out shadow-2xl z-50">
+    class="fixed top-0 left-0 h-full w-2/5 sm:w-1/3 md:w-64 
+           bg-gradient-to-b from-indigo-700 to-indigo-900 text-white p-6 
+           transform -translate-x-full transition-transform duration-300 ease-in-out shadow-2xl z-50">
     
     <button id="btnClose"
-            class="absolute -right-8 top-4 bg-indigo-700 w-9 h-9 rounded-r text-xl flex items-center justify-center hover:bg-indigo-800 hidden">
+      class="absolute -right-8 top-4 bg-indigo-700 w-9 h-9 rounded-r text-xl flex items-center justify-center hover:bg-indigo-800 hidden">
       ❮
     </button>
 
@@ -30,7 +32,7 @@
       <span class="text-sm opacity-80">Guru</span>
     </div>
 
-    <nav class="mt-8 space-y-3">
+    <nav class="mt-8 space-y-3 w-full">
       <a href="#home" class="flex items-center gap-3 px-3 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 transition shadow">
         🏠 <span>Home</span>
       </a>
@@ -45,31 +47,39 @@
     <form action="{{ route('guru.logout') }}" method="POST" class="mt-10">
       @csrf
       <button type="submit"
-              class="w-full py-2 bg-red-600 hover:bg-red-700 rounded-lg font-bold shadow">
+        class="w-full py-2 bg-red-600 hover:bg-red-700 rounded-lg font-bold shadow">
         Logout
       </button>
     </form>
   </aside>
 
-  <!-- CONTENT -->
+  <!-- KONTEN UTAMA -->
   <div id="content" class="transition-all duration-300">
-    <!-- HEADER -->
-<header class="sticky top-0 z-40 bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md">
-  <div class="flex items-center justify-between px-10 py-4 w-full">
-    <div class="flex items-center gap-3">
-      <button id="btnMenu" class="text-3xl focus:outline-none hover:scale-110 transition">☰</button>
-      <h1 class="font-bold text-2xl tracking-wide pl-3">SmartJadwal</h1>
-    </div>
-  </div>
-</header> 
 
-    <!-- SECTION (dipanggil dari file lain) -->
+    <!-- HEADER (FIXED NAVBAR) -->
+    <header class="fixed top-0 left-0 w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md z-40">
+      <div class="flex items-center justify-between px-4 sm:px-6 md:px-10 py-4 w-full">
+        <div class="flex items-center gap-3">
+          <button id="btnMenu" class="text-3xl focus:outline-none hover:scale-110 transition">
+            ☰
+          </button>
+          <h1 class="font-bold text-2xl md:text-3xl tracking-wide pl-2 md:pl-3">
+            SmartJadwal
+          </h1>
+        </div>
+      </div>
+    </header>
+
+    <!-- SPASI SUPAYA KONTEN TIDAK TERSEMBUNYI DI BAWAH NAVBAR -->
+    <div class="h-20"></div>
+
+    <!-- SECTION (TERISI DARI FILE LAIN) -->
     @include('guru.sections.home')
     @include('guru.sections.atur-jadwal')
     @include('guru.sections.mata-pelajaran')
 
     <!-- FOOTER -->
-    <footer class="text-center text-gray-500 text-sm py-6">
+    <footer class="text-center text-gray-500 text-sm py-6 mt-10">
       © 2025 SmartJadwal. All rights reserved.
     </footer>
   </div>
@@ -85,7 +95,11 @@
       sidebar.classList.remove('-translate-x-full');
       btnClose.classList.remove('hidden');
       btnMenu.classList.add('hidden');
-      content.classList.add('ml-64');
+
+      // hanya geser konten di layar besar
+      if (window.innerWidth >= 768) {
+        content.classList.add('ml-64');
+      }
     });
 
     btnClose.addEventListener('click', () => {
@@ -93,6 +107,13 @@
       btnClose.classList.add('hidden');
       btnMenu.classList.remove('hidden');
       content.classList.remove('ml-64');
+    });
+
+    // reset posisi jika ukuran layar berubah
+    window.addEventListener('resize', () => {
+      if (window.innerWidth < 768) {
+        content.classList.remove('ml-64');
+      }
     });
   </script>
 

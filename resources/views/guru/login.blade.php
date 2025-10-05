@@ -6,37 +6,33 @@
   <title>Login Guru</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="min-h-screen flex flex-col relative">
+<body class="min-h-screen flex flex-col relative bg-white overflow-x-hidden">
 
-  <!-- Latar belakang belah dua -->
-  <div class="absolute top-0 left-0 w-1/2 h-full bg-white"></div>
-  <div class="absolute top-0 right-0 w-1/2 h-full bg-indigo-600"></div>
+  <!-- LATAR BELAKANG DUA SISI -->
+  <div class="fixed inset-0 flex -z-10">
+    <div class="w-1/2 bg-white h-full"></div>
+    <div class="w-1/2 bg-indigo-600 h-full"></div>
+  </div>
 
-  <!-- NAVBAR MELAYANG -->
-  <header class="fixed top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-6xl 
-                 bg-white rounded-xl shadow-lg z-50">
+  <!-- NAVBAR (tidak fixed) -->
+  <header class="w-[90%] max-w-6xl bg-white rounded-xl shadow-lg z-10 mx-auto mt-6">
     <div class="flex items-center justify-between px-6 py-4">
-      <!-- Logo -->
-      <h1 class="font-extrabold text-2xl text-indigo-600">
-        SmartJadwal
-      </h1>
-      <!-- Menu kanan -->
+      <h1 class="font-extrabold text-2xl text-indigo-600">SmartJadwal</h1>
       <nav class="flex items-center pr-5">
-        <a href="/index" class="text-gray-700 text-xl font-bold hover:text-indigo-600">
-          Home
-        </a>
-      </nav>  
+        <a href="/index" class="text-gray-700 text-xl font-bold hover:text-indigo-600 transition">Home</a>
+      </nav>
     </div>
   </header>
 
-  <!-- Konten utama -->
-  <main class="flex flex-1 items-center justify-center relative z-10 mt-28">
-    <div class="bg-white rounded-3xl shadow-[0_20px_40px_rgba(0,0,0,0.2)] p-12 w-[420px] text-center">
-      <h1 class="text-indigo-700 font-extrabold text-3xl mb-8 border-b-4 border-indigo-400 pb-4">
+  <!-- KONTEN UTAMA -->
+  <main class="flex flex-1 items-center justify-center relative z-10 px-4 sm:px-6 md:px-0 py-12">
+    <div class="bg-white rounded-3xl shadow-[0_20px_40px_rgba(0,0,0,0.2)] 
+                p-8 sm:p-10 md:p-12 w-full max-w-[420px] text-center">
+      <h1 class="text-indigo-700 font-extrabold text-2xl sm:text-3xl mb-8 border-b-4 border-indigo-400 pb-4">
         LOGIN GURU
       </h1>
 
-      {{-- TAMPILKAN PESAN ERROR/SUKSES --}}
+      {{-- Pesan sukses atau error --}}
       @if (session('success'))
         <div class="mb-4 text-green-600 font-semibold">
           {{ session('success') }}
@@ -83,7 +79,7 @@
           </div>
         </div>
 
-        <!-- Masukan NIP + Toggle Mata -->
+        <!-- NIP + Toggle Mata -->
         <div>
           <label for="nipInput" class="block text-sm font-medium text-gray-700 mb-1">NIP</label>
           <div class="relative">
@@ -92,7 +88,6 @@
               class="w-full text-base border border-indigo-300 rounded-lg px-4 py-3 
                      focus:outline-none focus:ring-2 focus:ring-indigo-500 
                      focus:border-indigo-500 bg-white shadow-sm pr-12">
-            <!-- Icon Mata -->
             <button type="button" id="toggleNip"
               class="absolute inset-y-0 right-3 flex items-center text-indigo-600">
               <svg id="eyeClosed" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
@@ -118,7 +113,7 @@
         </button>
       </form>
 
-      <!-- Tambahkan link register -->
+      <!-- Link register -->
       <p class="mt-6 text-center text-sm text-gray-600">
         Belum punya akun? 
         <a href="{{ route('guru.register') }}" class="text-indigo-600 font-semibold hover:underline">
@@ -128,11 +123,12 @@
     </div>
   </main>
 
-  <!-- Footer -->
+  <!-- FOOTER -->
   <footer class="relative z-10 text-center text-black text-sm py-4">
     © 2025 <span class="font-semibold text-black">SmartJadwal</span>. All rights reserved.
   </footer>
 
+  <!-- SCRIPT -->
   <script>
     const nipInput = document.getElementById("nipInput");
     const toggleBtn = document.getElementById("toggleNip");

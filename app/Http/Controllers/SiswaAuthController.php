@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Siswa;
-use App\Models\jadwal;
+use App\Models\Jadwal; // <-- perbaikan huruf besar
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -31,49 +31,45 @@ class SiswaAuthController extends Controller
             'kelas'    => 'required|string|max:50',
         ]);
 
-        $siswa = Siswa::create($request->all());
+        Siswa::create($request->all());
 
         return redirect()->route('siswa.login')->with('success', 'Registrasi berhasil! Silakan login.');
     }
 
     // === PROSES LOGIN (tanpa password, cukup NIS/username) ===
-   public function login(Request $request)
-{
-    $request->validate([
-        'nis'      => 'required|string',
-        'sekolah'  => 'required|string',
-        'angkatan' => 'required|string',
-        'kelas'    => 'required|string',
-    ]);
+    public function login(Request $request)
+    {
+        $request->validate([
+            'nis'      => 'required|string',
+            'sekolah'  => 'required|string',
+            'angkatan' => 'required|string',
+            'kelas'    => 'required|string',
+        ]);
 
-    $siswa = Siswa::where('nis', $request->nis)
-        ->where('sekolah', $request->sekolah)
-        ->where('angkatan', $request->angkatan)
-        ->where('kelas', $request->kelas)
-        ->first();
+        $siswa = Siswa::where('nis', $request->nis)
+            ->where('sekolah', $request->sekolah)
+            ->where('angkatan', $request->angkatan)
+            ->where('kelas', $request->kelas)
+            ->first();
 
-    if ($siswa) {
-        Auth::guard('siswa')->login($siswa);
-        return redirect()->route('siswa.dashboard');
+        if ($siswa) {
+            Auth::guard('siswa')->login($siswa);
+            return redirect()->route('siswa.dashboard');
+        }
+
+        return back()->withErrors(['login' => 'Data siswa tidak ditemukan atau salah.']);
     }
 
-    return back()->withErrors(['login' => 'Data siswa tidak ditemukan atau salah.']);
-}
-
-
-
-
     // === DASHBOARD SISWA ===
-public function dashboard()
-{
-    $siswa = Auth::guard('siswa')->user();
+    public function dashboard()
+    {
+        $siswa = Auth::guard('siswa')->user();
 
-    // ambil jadwal sesuai kelas siswa
-    $jadwal = Jadwal::where('kelas', $siswa->kelas)->get();
+        // ambil jadwal sesuai kelas siswa
+        $jadwal = Jadwal::where('kelas', $siswa->kelas)->get();
 
-    return view('siswa.dashboard', compact('siswa', 'jadwal'));
-}
-
+        return view('siswa.dashboard', compact('siswa', 'jadwal'));
+    }
 
     // === LOGOUT ===
     public function logout(Request $request)
